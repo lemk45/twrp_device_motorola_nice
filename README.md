@@ -6,7 +6,7 @@ This repository contains the TWRP device tree configuration for the **Motorola M
 
 | Feature | Specification |
 |:---|:---|
-| SoC | MediaTek MT6878 |
+| SoC | MediaTek Dimensity 7300|
 | CPU | 2x Cortex-A78 @ 2.5 GHz & 6x Cortex-A55 @ 2.0 GHz |
 | GPU | Mali-G615 MC2 |
 | Architecture | arm64-v8a |
