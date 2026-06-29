@@ -38,5 +38,3 @@ lunch twrp_nice-eng
 
 # Start building the recovery image
 mka recoveryimage
-Remember, the prebuilt kernel file is split due to GitHub's limitations. Join the two files using the command "cat"
-cat kernel.part1 kernel.part2 > kernel rm kernel.part1 kernel.part2
