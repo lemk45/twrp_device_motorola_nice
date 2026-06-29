@@ -15,11 +15,11 @@ jobs:
         remove-dotnet: 'true'
         remove-android: 'true'
         remove-haskell: 'true'
-
+        
     - name: Configurar Ambiente Linux
       run: |
         sudo apt-get update
-        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev libncurses5-dev libncursesw5-dev x11proto-core-dev libx11-dev libz1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc bison build-essential ccache curl flex g++ rsync libssl-dev python3
+        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev libncurses5-dev libncursesw5-dev libx11-dev zlib1g-dev libxml2-utils xsltproc unzip bc bison build-essential ccache curl flex g++ rsync libssl-dev python3
 
     - name: Instalar Ferramenta Repo do Google
       run: |
