@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Maximizar Espaço em Disco
-      uses: easimon/maximize-build-space@main
+      uses: easimon/maximize-build-space@v8
       with:
         root-reserve-mb: 1024
         swap-size-mb: 10240
