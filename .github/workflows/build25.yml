@@ -49,10 +49,11 @@ jobs:
         # Sincroniza os arquivos
         python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
-    - name: Clonar a Sua Device Tree
-      run: |
+        - name: Clonar a Sua Device Tree
+        run: |
         cd twrp
-        git clone https://github.com/kathlendelimafarias-bit/twrp_device_nice/tree/main
+        git clone --depth=1 "https://github.com" device/motorola/nice
+        
 
     - name: Executar a Compilação (Build)
       run: |
