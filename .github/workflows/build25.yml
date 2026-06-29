@@ -25,7 +25,7 @@ jobs:
         remove-haskell: 'true'
 
     - name: Baixar Ferramenta Repo do Google
-      run: 
+      run: |
         mkdir -p ~/bin
         curl -s https://githubusercontent.com > ~/bin/repo
         chmod a+x ~/bin/repo
