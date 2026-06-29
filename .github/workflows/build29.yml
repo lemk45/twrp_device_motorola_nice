@@ -1,4 +1,4 @@
-name: Build TWRP Oficial G86
+name: Build TWRP Oficcial G86
 
 on:
   workflow_dispatch:
