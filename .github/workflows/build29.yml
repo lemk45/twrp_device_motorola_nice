@@ -34,7 +34,7 @@ jobs:
     - name: Baixar Ferramentas de Build e Sincronizar Árvore
       run: |
         # O terminal do Linux ignora o bloqueio do YAML e estrutura as subpastas
-        git clone --depth=1 -b twrp-14 https://github.com twrp/build
+        git clone --depth=1 -b twrp-14 https://raw.github.com twrp/build
 
     - name: Clonar a Sua Device Tree
       uses: actions/checkout@v4
