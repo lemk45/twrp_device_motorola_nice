@@ -36,9 +36,16 @@ jobs:
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
         
-        # Baixa o script direto na pasta atual sem passar por pastas do sistema
+        # Baixa o script com o link oficial corrigido
         curl https://githubusercontent.com > ./repo
         chmod a+x ./repo
+        
+        # Inicializa o repositório usando o Python direto no script limpo
+        python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
+        
+        # Sincroniza os arquivos
+        python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        
         
         # Inicializa o repositório usando o Python direto no script limpo que acabamos de baixar
         python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
