@@ -52,7 +52,7 @@ jobs:
     - name: Clonar a Sua Device Tree
       run: |
         cd twrp
-        git clone https://github.com device/motorola/nice
+        git clone --depth=1 "https://github.com" device/motorola/nice
 
     - name: Executar a Compilação (Build)
       run: |
