@@ -45,9 +45,10 @@ jobs:
       run: |
         cd twrp
         export ALLOW_MISSING_DEPENDENCIES=true
-        . build/envsetup.sh
+        source build/envsetup.sh
         lunch twrp_nice-eng
         mka recoveryimage -j$(nproc --all)
+        
 
     - name: Salvar o Arquivo .IMG Pronto
       uses: actions/upload-artifact@v4
