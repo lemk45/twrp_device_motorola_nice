@@ -5,7 +5,7 @@
 
 # Device identifier
 PRODUCT_DEVICE := nice
-PRODUCT_NAME := twrp_nice
+PRODUCT_NAME := omni_nice
 PRODUCT_BRAND := motorola
 PRODUCT_MODEL := Moto G86
 PRODUCT_MANUFACTURER := motorola
