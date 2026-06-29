@@ -30,7 +30,7 @@ jobs:
         cd twrp
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
-        curl https://githubusercontent.com > ./repo
+        curl https://raw.githubusercontent.com > ./repo
         chmod a+x ./repo
         python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
         python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
