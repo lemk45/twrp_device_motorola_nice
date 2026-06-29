@@ -1,91 +1,83 @@
-name: Build TWRP for G86 5G
+name: Make twrp-12.1
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: [self-hosted, twrp-comp]
+    runs-on: ubuntu-18.04
 
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@v3
-
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
+    - name: Remove Useless Package
+      run: |
+        docker rmi `docker images -q`
+        sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d
+        sudo apt -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+        sudo apt -y autoremove --purge
+        sudo apt -y autoclean
+        sudo apt clean
+    - name: Maximize Build Space
+      uses: easimon/maximize-build-space@master
       with:
-        java-version: '8'
-        distribution: 'temurin'
+        root-reserve-mb: 1024
+        swap-size-mb: 10240
+        remove-dotnet: 'true'
+        temp-reserve-mb: 1024
+        remove-android: 'true'
+        remove-haskell: 'true'
 
-    - name: Set Git user info
-      run: |
-        git config --global user.name "Null Byte"
-        git config --global user.email "andrexyt@proton.me"
+    - name: Check Out
+      uses: actions/checkout@main
 
-    - name: Install dependencies
+    - name: Set Variables
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          repo \
-          git \
-          g++-multilib \
-          lib32z1-dev \
-          libncurses5-dev \
-          libssl-dev \
-          libxml2-utils \
-          bison \
-          build-essential \
-          squashfs-tools \
-          zip \
-          libncurses-dev \
-          zlib1g-dev \
-          gcc-multilib \
-          g++-multilib \
-          make \
-          python3 \
-          python3-pip \
-          curl \
-          wget \
-          bc \
-          jq
+        echo "::set-output name=date::$(date +%F)"
+      id: var
 
-    - name: Clean up disk space
+    - name: Prepare Environment
       run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /usr/local/lib/android
-        sudo rm -rf /opt/ghc
-        sudo rm -rf /usr/local/share/boost
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-        sudo apt-get clean
-        df -h
-
-    - name: Set up large swap memory (14GB)
+        export HOME=${GITHUB_WORKSPACE}
+        cd ${GITHUB_WORKSPACE}
+        sudo apt -y install git aria2 
+        git clone https://gitlab.com/OrangeFox/misc/scripts
+        cd scripts
+        sudo bash setup/android_build_env.sh
+        sudo bash setup/install_android_sdk.sh || true
+    - name: Init Repo
       run: |
-        sudo swapoff -a
-        sudo rm -f /swapfile
-        sudo dd if=/dev/zero of=/swapfile bs=1M count=14336
-        sudo chmod 600 /swapfile
-        sudo mkswap /swapfile
-        sudo swapon /swapfile
-        sudo swapon --show
-        free -h
-
-    - name: Sync the repo
+        mkdir ${GITHUB_WORKSPACE}/workspace
+        cd ${GITHUB_WORKSPACE}/workspace
+        git config --global user.name "Hikaru's Action-Build-Bot"
+        git config --global user.email "Android@teio.tk"
+        repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+    - name: Repo Sync
       run: |
-        repo init -u https://android.googlesource.com/platform/manifest
+        cd ${GITHUB_WORKSPACE}/workspace
         repo sync -j$(nproc --all)
-
-    - name: Set up the build environment
+        ls -al
+    - name: Repopick Patches
       run: |
-        . build/envsetup.sh
-        lunch Tetris-userdebug
-
-    - name: Build TWRP
+        cd ${GITHUB_WORKSPACE}/workspace
+        source build/envsetup.sh
+        repopick 5639
+        repopick 5675
+        repopick 5690
+        repopick 5691
+        repopick 5743
+        repopick 6217
+    - name: Clone Device Tree
       run: |
-        make recoveryimage -j$(nproc --all)
-
-    - name: Export the TWRP artifact
+        cd ${GITHUB_WORKSPACE}/workspace
+        git clone https://github.com/YuKongA/device_xiaomi_daumier-TWRP.git -b twrp-12.1_5.10.101 ./device/xiaomi/daumier
+    - name: Building
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace
+        source build/envsetup.sh
+        lunch twrp_daumier-eng
+        mka vendorbootimage -j$(nproc --all)
+    - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: twrp-recovery
-        path: out/target/product/*/recovery.img
+        name: daumier_twrp-12.1
+        path: workspace/out/target/product/daumier/vendor_boot.img
+        
