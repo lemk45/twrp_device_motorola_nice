@@ -24,32 +24,30 @@ jobs:
         remove-android: 'true'
         remove-haskell: 'true'
 
-  
-    - name: Baixar Código Fonte Mínimo do TWRP
-      run: |
-        rm -rf twrp || true
-        mkdir -p twrp
-        cd twrp
-        git config --global user.name "kathlendelimafarias-bit"
-        git config --global user.email "kathlendelimafarias@gmail.com"
-        
-        # Baixa o script do repo diretamente dentro da pasta de trabalho
-        curl https://raw.githubusercontent.com > ./repo
-        chmod a+x ./repo
-        
-        # Executa a inicialização e o sincronismo chamando o script local via Python 3
-        python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
-        python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-        
-
-    - name: Clonar a Sua Device Tree
+    - name: Clonar a Sua Device Tree Automaticamente
       uses: actions/checkout@v4
       with:
         path: twrp/device/motorola/nice
 
-    - name: Executar a Compilação (Build)
+    - name: Sincronizar Código do TWRP e Compilar (Tudo Junto)
       run: |
+        # Cria a pasta e entra nela
+        mkdir -p twrp
         cd twrp
+        
+        # Configura as credenciais locais do Git
+        git config --global user.name "kathlendelimafarias-bit"
+        git config --global user.email "kathlendelimafarias@gmail.com"
+        
+        # Baixa o script do repo localmente na pasta certa
+        curl https://githubusercontent.com > ./repo
+        chmod a+x ./repo
+        
+        # Inicializa e baixa todos os gigabytes de arquivos do Android 14
+        python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
+        python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        
+        # Com todos os arquivos na pasta, carrega o ambiente e inicia a compilação real!
         export ALLOW_MISSING_DEPENDENCIES=true
         source build/envsetup.sh
         lunch twrp_nice-eng
