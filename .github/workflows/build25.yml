@@ -26,12 +26,20 @@ jobs:
 
     - name: Baixar Ferramenta e Inicializar Manifesto (Tudo Junto)
       run: |
-        mkdir -p ~/bin && curl -sL https://googleapis.com > ~/bin/repo && chmod a+x ~/bin/repo
+        # Instala a ferramenta repo nativa do Ubuntu sem precisar de links externos
+        sudo apt-get update && sudo apt-get install -y repo
+        
+        # Prepara a pasta de trabalho
         mkdir -p twrp
         cd twrp
+        
+        # Configura as credenciais
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
-        ~/bin/repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
+        
+        # Inicializa o manifesto usando o comando global do sistema
+        repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
+
 
     - name: Sincronizar Arquivos do Android 14 (Download Longo)
       run: |
