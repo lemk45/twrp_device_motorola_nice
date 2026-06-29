@@ -152,6 +152,7 @@ TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/battery"
 TW_Y_OFFSET := 95
 TW_H_OFFSET := -95
 TW_INCLUDE_PYTHON := true
+TW_SUPPORT_INPUT_1_2 := true
 
 # Ramdisk Ramificações A/B
 BOARD_USES_RECOVERY_AS_BOOT := false
