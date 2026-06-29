@@ -26,7 +26,7 @@ jobs:
 
     - name: Baixar Ferramenta e Inicializar Manifesto (Tudo Junto)
       run: |
-        mkdir -p ~/bin && curl -s https://githubusercontent.com > ~/bin/repo && chmod a+x ~/bin/repo
+        mkdir -p ~/bin && curl -sL https://githubusercontent.com > ~/bin/repo && chmod a+x ~/bin/repo
         mkdir -p twrp
         cd twrp
         git config --global user.name "kathlendelimafarias-bit"
