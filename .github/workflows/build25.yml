@@ -1,7 +1,7 @@
-name: Compile TWRP Moto G86
+name: Compilar TWRP Moto G86
 
 on:
-  workflow_dispatch: # Permite ativar a compilação manualmente com um clique
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,37 +23,22 @@ jobs:
         remove-dotnet: 'true'
         remove-android: 'true'
         remove-haskell: 'true'
-    
-    - name: Instalar Repo e Baixar Código Fonte Mínimo do TWRP (Android 14)
+
+    - name: Instalar Repo e Baixar Código Fonte Mínimo do TWRP
       run: |
         mkdir twrp
         cd twrp
-        # Configura a identidade do Git
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
-        
-        # Baixa o script com o link oficial corrigido
-        curl https://raw.githubusercontent.com > ./repo
+        curl https://githubusercontent.com > ./repo
         chmod a+x ./repo
-        
-        # Inicializa o repositório usando o Python direto no script limpo
         python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
-        
-        # Sincroniza os arquivos
-        python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-        
-        
-        # Inicializa o repositório usando o Python direto no script limpo que acabamos de baixar
-        python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
-        
-        # Sincroniza os arquivos
         python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
-        - name: Clonar a Sua Device Tree
-        run: |
+    - name: Clonar a Sua Device Tree
+      run: |
         cd twrp
-        git clone --depth=1 "https://github.com" twrp_device_nice
-        
+        git clone --depth=1 "https://github.com" device/motorola/nice
 
     - name: Executar a Compilação (Build)
       run: |
@@ -63,7 +48,7 @@ jobs:
         lunch twrp_nice-eng
         mka recoveryimage -j$(nproc --all)
 
-    - name: Salvar o Arquivo .img Pronto
+    - name: Salvar o Arquivo .IMG Pronto
       uses: actions/upload-artifact@v4
       with:
         name: TWRP-MotoG86-Nice
