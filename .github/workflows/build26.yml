@@ -1,63 +1,20 @@
-name: Build TWRP Oficial G86
-
-on:
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout do Repositório
-      uses: actions/checkout@v4
-
-    - name: Configurar Ambiente Linux
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev libncurses5-dev libncursesw5-dev libx11-dev zlib1g-dev libxml2-utils xsltproc unzip bc bison build-essential ccache curl flex g++ rsync libssl-dev python3 git
-
-    - name: Maximizar Espaço em Disco
-      uses: easimon/maximize-build-space@v8
-      with:
-        root-reserve-mb: 1024
-        swap-size-mb: 10240
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-
     - name: Sincronizar Código Fonte do TWRP (Método Oficial Integrado)
       run: |
-        # Cria a pasta de trabalho limpa
-        mkdir -p twrp
+        # Garante uma pasta limpa
+        rm -rf twrp || true
+        mkdir twrp
         cd twrp
         
-        # Limpa agressivamente QUALQUER configuração global que o GitHub Actions injete
+        # Reseta as travas do Git e configura a identidade
         rm -f ~/.gitconfig
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
         
-        # Baixa a versão oficial e universal do script repo
-        curl -sL https://googleapis.com > ./repo-bin
-        chmod a+x ./repo-bin
+        # Instala a ferramenta repo de forma nativa e infalível via gerenciador do Python
+        pip3 install git-repo
         
-        # Inicializa e força o download completo usando a URL direta do Git-Repo
-        python3 ./repo-bin init --depth=1 --no-repo-verify --repo-url=https://github.com -u https://github.com -b twrp-14
-        python3 ./repo-bin sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-
-    - name: Clonar a Sua Device Tree
-      uses: actions/checkout@v4
-      with:
-        path: twrp/device/motorola/nice
-
-    - name: Executar a Compilação (Build)
-      run: |
-        cd twrp
-        export ALLOW_MISSING_DEPENDENCIES=true
-        source build/envsetup.sh
-        lunch twrp_nice-eng
-        mka recoveryimage -j$(nproc --all)
-
-    - name: Salvar o Arquivo .IMG Pronto
-      uses: actions/upload-artifact@v4
-      with:
-        name: TWRP-MotoG86-Nice
-        path: twrp/out/target/product/nice/*.img
+        # Inicializa o manifesto do TWRP 14 usando o comando instalado pelo Python
+        repo init --depth=1 --no-repo-verify --repo-url=https://github.com -u https://github.com -b twrp-14
+        
+        # Inicia o download massivo dos arquivos do Android 14
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
