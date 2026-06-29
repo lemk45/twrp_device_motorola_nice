@@ -37,7 +37,7 @@ jobs:
         
         # Cria a pasta de binários locais e baixa o script oficial do Google
         mkdir -p ~/bin
-        curl https://githubusercontent.com > ~/bin/repo
+        curl https://raw.githubusercontent.com > ~/bin/repo
         chmod a+x ~/bin/repo
         
         # Inicializa o manifesto do TWRP 14 e força o uso do espelho estável do git-repo
