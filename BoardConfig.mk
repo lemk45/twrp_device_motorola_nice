@@ -74,8 +74,8 @@ BOARD_DTB_OFFSET := 0x07C88000
 BOARD_KERNEL_CMDLINE := root=/dev/ram nosoftlockup 8250.nr_uarts=3 vmalloc=400M swiotlb=noforce transparent_hugepage=never cgroup.memory=nosocket,nokmem disable_dma32=on firmware_class.path=/vendor/firmware gpt=1 loop.max_part=7 ufshcd_core.poll_queues=0 usb2jtag_mode=0 bootopt=64S3,32N2,64N2 bootconfig
 BOARD_VENDOR_CMDLINE := bootopt=64S3,32N2,64N2
 
-# Argumentos de montagem da imagem de boot
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+# Boot assembly arguments
+BOARD_MKBOOTIMG_ARGS += --dtb $(DEVICE_PATH)/prebuilt/dtb.img
 BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_PAGE_SIZE) --board ""
 BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
