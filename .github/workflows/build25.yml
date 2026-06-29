@@ -40,7 +40,7 @@ jobs:
         git config --global user.email "kathlendelimafarias@gmail.com"
         
         # Baixa o script do repo localmente na pasta certa
-        curl https://githubusercontent.com > ./repo
+        curl https://raw.githubusercontent.com > ./repo
         chmod a+x ./repo
         
         # Inicializa e baixa todos os gigabytes de arquivos do Android 14
