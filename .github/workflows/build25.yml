@@ -38,7 +38,10 @@ jobs:
     - name: Clonar a Sua Device Tree
       run: |
         cd twrp
-        git clone --depth=1 git@github.com:kathlendelimafarias-bit/twrp_device_nice.git device/motorola/nice
+        # Força o Git a esquecer qualquer redirecionamento para SSH nessa pasta
+        git config --global --unset url."git@github.com:".insteadOf || true
+        git config --global --unset url."https://github.com".insteadOf || true
+        git clone --depth=1 https://github.comkathlendelimafarias-bit/twrp_device_nice.git device/motorola/nice
 
     - name: Executar a Compilação (Build)
       run: |
