@@ -28,14 +28,23 @@ jobs:
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
     
-    - name: Baixar Código Fonte Mínimo do TWRP (Android 14)
+    - name: Instalar Repo e Baixar Código Fonte Mínimo do TWRP (Android 14)
       run: |
         mkdir twrp
         cd twrp
+        # Configura a identidade do Git
         git config --global user.name "kathlendelimafarias-bit"
         git config --global user.email "kathlendelimafarias@gmail.com"
-        repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
-        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        
+        # Baixa o script direto na pasta atual sem passar por pastas do sistema
+        curl https://githubusercontent.com > ./repo
+        chmod a+x ./repo
+        
+        # Inicializa o repositório usando o Python direto no script limpo que acabamos de baixar
+        python3 ./repo init --depth=1 --repo-url=https://github.com -u https://github.com -b twrp-14.0
+        
+        # Sincroniza os arquivos
+        python3 ./repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Clonar a Sua Device Tree
       run: |
