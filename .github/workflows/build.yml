@@ -1,0 +1,91 @@
+name: Build TWRP for Moto g86
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, twrp-comp]
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+
+    - name: Set Git user info
+      run: |
+        git config --global user.name "Null Byte"
+        git config --global user.email "andrexyt@proton.me"
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          repo \
+          git \
+          g++-multilib \
+          lib32z1-dev \
+          libncurses5-dev \
+          libssl-dev \
+          libxml2-utils \
+          bison \
+          build-essential \
+          squashfs-tools \
+          zip \
+          libncurses-dev \
+          zlib1g-dev \
+          gcc-multilib \
+          g++-multilib \
+          make \
+          python3 \
+          python3-pip \
+          curl \
+          wget \
+          bc \
+          jq
+
+    - name: Clean up disk space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        sudo apt-get clean
+        df -h
+
+    - name: Set up large swap memory (14GB)
+      run: |
+        sudo swapoff -a
+        sudo rm -f /swapfile
+        sudo dd if=/dev/zero of=/swapfile bs=1M count=14336
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
+        sudo swapon --show
+        free -h
+
+    - name: Sync the repo
+      run: |
+        repo init -u https://android.googlesource.com/platform/manifest
+        repo sync -j$(nproc --all)
+
+    - name: Set up the build environment
+      run: |
+        . build/envsetup.sh
+        lunch Tetris-userdebug
+
+    - name: Build TWRP
+      run: |
+        make recoveryimage -j$(nproc --all)
+
+    - name: Export the TWRP artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: twrp-recovery
+        path: out/target/product/*/recovery.img
