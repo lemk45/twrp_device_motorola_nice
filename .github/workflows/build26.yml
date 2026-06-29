@@ -34,7 +34,7 @@ jobs:
     - name: Clonar Ferramentas de Build do Android (Ação Oficial)
       uses: actions/checkout@v4
       with:
-        repository: 'minimal-manifest-twrp/android_build'
+        repository: 'minimal-manifest-twrp/platform_manifest_twrp_aosp'
         ref: 'twrp-14'
         path: 'twrp/build'
 
