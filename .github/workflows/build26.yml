@@ -27,7 +27,7 @@ jobs:
     - name: Clonar Base de Compilação do TWRP (Android 14)
       uses: actions/checkout@v4
       with:
-        repository: 'twrpdtgen/android_build_twrp_aosp'
+        repository: 'minimal-manifest-twrp/platform_manifest_twrp_aosp'
         ref: 'twrp-14'
         path: 'twrp'
 
