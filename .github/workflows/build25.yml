@@ -1,0 +1,56 @@
+name: Compile TWRP Moto G86
+
+on:
+  workflow_dispatch: # Permite ativar a compilação manualmente com um clique
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Maximizar Espaço em Disco
+      uses: easimon/maximize-build-space@v8
+      with:
+        root-reserve-mb: 1024
+        swap-size-mb: 10240
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+
+    - name: Configurar Ambiente Linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gperf gcc-multilib g++-multilib libc6-dev libncurses5-dev libncursesw5-dev x11proto-core-dev libx11-dev libz1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc bison build-essential ccache curl flex g++ rsync libssl-dev python3
+
+    - name: Instalar Ferramenta Repo do Google
+      run: |
+        mkdir ~/bin
+        curl https://googleapis.com > ~/bin/repo
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
+
+    - name: Baixar Código Fonte Mínimo do TWRP (Android 14)
+      run: |
+        mkdir twrp
+        cd twrp
+        repo init --depth=1 -u https://github.com -b twrp-14.0
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Clonar a Sua Device Tree
+      run: |
+        cd twrp
+        git clone https://github.com device/motorola/nice
+
+    - name: Executar a Compilação (Build)
+      run: |
+        cd twrp
+        export ALLOW_MISSING_DEPENDENCIES=true
+        . build/envsetup.sh
+        lunch twrp_nice-eng
+        mka recoveryimage -j$(nproc --all)
+
+    - name: Salvar o Arquivo .img Pronto
+      uses: actions/upload-artifact@v4
+      with:
+        name: TWRP-MotoG86-Nice
+        path: twrp/out/target/product/nice/*.img
+        
