@@ -34,7 +34,7 @@ jobs:
         git config --global user.email "kathlendelimafarias@gmail.com"
         
         # Baixa o script do repo diretamente dentro da pasta de trabalho
-        curl https://githubusercontent.com > ./repo
+        curl https://raw.githubusercontent.com > ./repo
         chmod a+x ./repo
         
         # Executa a inicialização e o sincronismo chamando o script local via Python 3
