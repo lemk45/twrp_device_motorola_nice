@@ -51,7 +51,7 @@ jobs:
         cd ../twrp_base
         export ALLOW_MISSING_DEPENDENCIES=true
         source build/envsetup.sh
-        lunch twrp_nice-userdebug
+        lunch twrp_nice-aosp-userdebug
         make recoveryimage -j$(nproc)
 
     - name: Salvar o arquivo .img gerado
