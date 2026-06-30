@@ -7,6 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+    - name: Baixar os arquivos do próprio repositório
+      uses: actions/checkout@v4
+
     - name: Configurar Ambiente Linux
       run: |
         sudo apt-get update
@@ -15,29 +18,30 @@ jobs:
     - name: Instalar a ferramenta Repo do Google
       run: |
         mkdir -p ~/bin
-        # Link oficial e direto atualizado para o binário do repo
-        curl https://googlesource.com | base64 --decode -> ~/bin/repo
+        curl https://googlesource.com | base64 --decode > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
 
     - name: Sincronizar Código-Fonte do TWRP
       run: |
-        mkdir twrp
-        cd twrp
+        # Cria a pasta de build em paralelo para não misturar com o checkout inicial
+        mkdir -p ../twrp_base
+        cd ../twrp_base
         git config --global user.name "Seu Nome"
         git config --global user.email "seu_email@exemplo.com"
-        # Usando o manifesto oficial do TWRP focado em bases modernas de 64-bit
         repo init --depth=1 -u https://github.com -b twrp-12.1
         repo sync -j$(nproc) --force-sync
 
-    - name: Clonar sua Árvore de Dispositivos (Device Tree)
+    - name: Mover Árvore de Dispositivos para o Local Correto
       run: |
-        # ATENÇÃO: Altere para a URL real da sua árvore do "nice"
-        git clone https://github.com twrp/device/motorola/nice
+        # Cria a pasta de destino dentro da estrutura do código-fonte
+        mkdir -p ../twrp_base/device/motorola/nice
+        # Copia todos os arquivos que você enviou para o GitHub (exceto a pasta oculta .github)
+        rsync -arv --exclude='.github' --exclude='.git' ./ ../twrp_base/device/motorola/nice/
 
     - name: Executar a Compilação (.img)
       run: |
-        cd twrp
+        cd ../twrp_base
         export ALLOW_MISSING_DEPENDENCIES=true
         source build/envsetup.sh
         lunch twrp_nice-eng 
@@ -47,4 +51,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: TWRP-Nice-Final
-        path: twrp/out/target/product/nice/recovery.img
+        path: ../twrp_base/out/target/product/nice/recovery.img
