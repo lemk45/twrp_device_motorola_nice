@@ -51,7 +51,7 @@ jobs:
         cd ../twrp_base
         export ALLOW_MISSING_DEPENDENCIES=true
         source build/envsetup.sh
-        lunch twrp_nice-eng 
+        lunch twrp_nice-strunk_staging-eng
         make recoveryimage -j$(nproc)
 
     - name: Salvar o arquivo .img gerado
