@@ -47,16 +47,17 @@ jobs:
     - name: Executar a Compilação (.img)
       run: |
         cd ../twrp_base
+        export TARGET_RELEASE=
+        export TARGET_BUILD_RELEASE=
+        export DISABLE_RELEASE_CONFIG_VALIDATION=true
         export BUILD_BROKEN_MISSING_OUTPUTS=true
         export ALLOW_MISSING_DEPENDENCIES=true
-        export DISABLE_RELEASE_CONFIG_VALIDATION=true
         source build/envsetup.sh
-        lunch $(lunch | grep "twrp_nice" | head -n
-        '{print $1}' | sed 's/^[O-9]*\. //') || lunch
+        lunch twrp_nice-eng
         mkdir -p out/target/product/nice
         cp device/motorola/nice/prebuilt/kernel out/target/product/nice/kernel
         cp device/motorola/nice/prebuilt/dtb.img out/target/product/nice/dtb.img
-        mka vendorbootimage
+        mka bootimage
 
     - name: Salvar o arquivo .img gerado
       uses: actions/upload-artifact@v4
