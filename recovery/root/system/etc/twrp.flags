@@ -3,6 +3,8 @@
 /vendor         ext4    vendor                                     flags=display="Vendor";backup=1;logical;slotselect
 /product        ext4    product                                    flags=display="Product";backup=1;logical;slotselect
 /system_ext     ext4    system_ext                                 flags=display="System EXT";backup=1;logical;slotselect
+/system_dlkm    ext4    system_dlkm                                flags=display="System DLKM";backup=1;logical;slotselect
+/vendor_dlkm    ext4    vendor_dlkm                                flags=display="Vendor DLKM";backup=1;logical;slotselect
 
 # Cores and Metadata
 /metadata       ext4      /dev/block/by-name/metadata              flags=display="Metadata";backup=1
