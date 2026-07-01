@@ -54,5 +54,5 @@ PRODUCT_PACKAGES += \
 
 # Arquivos de inicialização e partições (fstab)
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/rootdir/etc/fstab.mt6878:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.mt6878 \
-    $(DEVICE_PATH)/rootdir/etc/fstab.mt6878:$(TARGET_COPY_OUT_RAMDISK)/fstab.mt6878
+    $(DEVICE_PATH)/recovery/root/recovery.fstab:$ (TARGET_COPY_OUT_VENDOR)/etc/fstab.mt6878 \
+    $(DEVICE_PATH)/recovery/root/recovery.fstab:$ (TARGET_COPY_OUT_RAMDISK)/fstab.mt6878
