@@ -1,1 +1,1 @@
-COMMON_LUNCH_CHOICES := twrp_nice-trunk_staging-eng
+COMMON_LUNCH_CHOICES := twrp_nice-eng
