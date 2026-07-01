@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2026 The Android Open Source Project
-# Board Configuration for Motorola mt6878 (nice)
+# Board Configuration for Motorola mt6878 (nice) - Boot RAMDISK Strategy
 #
 
 DEVICE_PATH := device/motorola/nice
@@ -92,7 +92,7 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 
 # ==============================================================================
-# Módulos do Kernel e Drivers (Essencial para não dar bootloop)
+# Módulos do Kernel e Drivers (Essencial para manter na ramdisk do Boot)
 # ==============================================================================
 TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 TW_LOAD_VENDOR_MODULES := $(shell echo \"$(shell ls $(DEVICE_PATH)/recovery/root/vendor/lib/modules)\")
@@ -100,13 +100,12 @@ TW_LOAD_VENDOR_MODULES := $(shell echo \"$(shell ls $(DEVICE_PATH)/recovery/root
 # ==============================================================================
 # Partições e Armazenamento
 # ==============================================================================
-# Bloco Flash adaptado para paginação moderna (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_FLASH_BLOCK_SIZE := 262144
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_HAS_LARGE_FILESYSTEM := true
 
-# Sistemas de arquivos dinâmicos (O TWRP lida com EXT4/EROFS via recovery.fstab)
+# Sistemas de arquivos dinâmicos
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -172,16 +171,17 @@ TW_INCLUDE_LOGCAT := true
 TW_USES_LOGD := true
 
 # ==============================================================================
-# Ramdisk Ramificações A/B e Vendor Boot
+# Ramdisk Estratégia de Boot Alternativa (TWRP injetado no boot.img)
 # ==============================================================================
-BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-TW_LOAD_VENDOR_BOOT_MODULES := true
-BOARD_CUSTOM_INIT_BOOT_IMAGE := true
-BOARD_INIT_BOOTIMAGE_PARTITION_SIZE := 8388608
+BOARD_USES_RECOVERY_AS_BOOT := true
 
-# Lista de partições para o sistema A/B de atualização do Recovery
+# Desativando o redirecionamento para partições de primeiro estágio bloqueadas
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := false
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := false
+TW_LOAD_VENDOR_BOOT_MODULES := false
+BOARD_CUSTOM_INIT_BOOT_IMAGE := false
+
+# Lista de partições para o sistema A/B de atualização
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += \
     system \
