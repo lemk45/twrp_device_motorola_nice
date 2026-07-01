@@ -10,6 +10,15 @@ jobs:
     - name: Baixar os arquivos do próprio repositório
       uses: actions/checkout@v4
 
+    - name: Liberar Espaço em Disco (Remover Lixo do GitHub)
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf /usr/lib/jvm
+        df -h
+
     - name: Configurar Ambiente Linux e Instalar Ferramentas
       run: |
         sudo apt-get update
@@ -18,7 +27,6 @@ jobs:
     - name: Clonar a Ferramenta Repo do Gerrit Oficial
       run: |
         mkdir -p ~/bin
-        # Clonando o repositório do Gerrit que você mandou e criando o link simbólico
         git clone https://gerrit.googlesource.com/git-repo ~/bin/git-repo
         ln -sf ~/bin/git-repo/repo ~/bin/repo
         chmod a+x ~/bin/repo
@@ -33,7 +41,6 @@ jobs:
       run: |
         mkdir -p ../twrp_base
         cd ../twrp_base
-        # Usando a URL oficial estável do repositório minimal do TWRP
         repo init --depth=1 --no-repo-verify -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
 
     - name: Sincronizar Código-Fonte (Download Pesado)
@@ -63,5 +70,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
        name: TWRP-Nice-Final
-       path: /home/runner/work/twrp_device_motorola_nice/twrp_base/out/target/product/nice/vendor_boot.img
+       path: /home/runner/work/twrp_device_motorola_nice/twrp_base/out/target/product/nice/boot.img
        if-no-files-found: warn
