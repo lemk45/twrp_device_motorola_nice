@@ -3,4 +3,4 @@ PRODUCT_MAKEFILES := \
 
 COMMON_LUNCH_CHOICES := \
     twrp_nice \
-    lunch twrp_nice-ap2a-eng
+    twrp_nice-ap2a-eng
