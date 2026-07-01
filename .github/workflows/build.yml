@@ -49,9 +49,9 @@ jobs:
     - name: Executar a Compilação (.img)
       run: |
         cd ../twrp_base
-        mkdir -p build/make/core/release_config
-        touch build/make/core/release_config/trunk_staging.mk
+        export BUILD_BROKEN_MISSING_OUTPUTS=true
         export ALLOW_MISSING_DEPENDENCIES=true
+        export DISABLE_RELEASE_CONFIG_VALIDATION=true
         source build/envsetup.sh
         lunch twrp_nice-trunk_staging-userdebug
         mka recoveryimage -j$(nproc)
