@@ -54,7 +54,7 @@ jobs:
         export DISABLE_RELEASE_CONFIG_VALIDATION=true
         source build/envsetup.sh
         lunch twrp_nice-eng
-        mka recoveryimage
+        mka vendorbootimage
 
     - name: Salvar o arquivo .img gerado
       uses: actions/upload-artifact@v4
