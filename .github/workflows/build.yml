@@ -60,4 +60,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: TWRP-Nice-Final
-        path: ../twrp_base/out/target/product/nice/recovery.img
+        path: ../twrp_base/out/target/product/nice/*.img
