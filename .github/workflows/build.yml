@@ -54,6 +54,9 @@ jobs:
         export DISABLE_RELEASE_CONFIG_VALIDATION=true
         source build/envsetup.sh
         lunch twrp_nice-eng
+        mkdir -p out/target/product/nice
+        cp device/motorola/nice/prebuilt/kernel out/target/product/nice/kernel
+        cp device/motorola/nice/prebuilt/dtb.img out/target/product/nice/dtb.img
         mka vendorbootimage
 
     - name: Salvar o arquivo .img gerado
