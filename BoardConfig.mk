@@ -83,8 +83,8 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 
 # Imagens Prebuilt do Kernel, DTB e DTBO (Apontando para a sua pasta prebuilt)
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel:out/target/product/nice/kernel \
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img:out/target/product/nice/dtb.img
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
 TARGET_NO_KERNEL_OVERRIDE := true
 
